@@ -74,6 +74,9 @@ import scratchLogo from './scratch-logo.svg';
 
 import sharedMessages from '../../lib/shared-messages';
 
+//import OnlineSaveButton file.
+import OnlineSaveButton from '../rhjxx-online-save/online-save-button.jsx';
+
 const ariaMessages = defineMessages({
     language: {
         id: 'gui.menuBar.LanguageSelector',
@@ -473,6 +476,8 @@ class MenuBar extends React.Component {
                             </MenuBarMenu>
                         </div>
                     </div>
+                    <Divider className={classNames(styles.divider)} />
+                    <OnlineSaveButton />
                     <Divider className={classNames(styles.divider)} />
                     <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
