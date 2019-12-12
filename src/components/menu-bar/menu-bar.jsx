@@ -74,8 +74,8 @@ import scratchLogo from './scratch-logo.svg';
 
 import sharedMessages from '../../lib/shared-messages';
 
-//import OnlineSaveButton file.
-import OnlineSaveButton from '../rhjxx-online-save/online-save-button.jsx';
+//把SB3DownloaderRhjxx复制一份，文件生成部分不用管，只把文件下载逻辑改成，提交到服务器。
+import SB3DownloaderRhjxx from '../../containers/sb3-downloader-rhjxx.jsx';
 
 const ariaMessages = defineMessages({
     language: {
@@ -272,6 +272,19 @@ class MenuBar extends React.Component {
         }
         }
     }
+
+    //把Scratch3原有的下载文件的代码复制一份，用于在线保存。
+    getSaveToServerHandler (downloadProjectCallback) {
+        return () => {
+            this.props.onRequestCloseFile();
+            downloadProjectCallback();
+            if (this.props.onProjectTelemetryEvent) {
+                const metadata = collectMetadata(this.props.vm, this.props.projectTitle, this.props.locale);
+                this.props.onProjectTelemetryEvent('projectDidSave', metadata);
+            }
+        };
+    }
+
     render () {
         const saveNowMessage = (
             <FormattedMessage
@@ -477,7 +490,15 @@ class MenuBar extends React.Component {
                         </div>
                     </div>
                     <Divider className={classNames(styles.divider)} />
-                    <OnlineSaveButton />
+                    {/**复制一个SB3Downloader，把保存逻辑改了，看不懂组件原理也没关系。 */}
+                    <SB3DownloaderRhjxx>{(className, downloadProjectCallback) => (
+                        <button
+                            className={className}
+                            onClick={this.getSaveToServerHandler(downloadProjectCallback)}
+                        >保存作业
+                        </button>
+                    )}</SB3DownloaderRhjxx>
+                    {/**----------------------------------------------------------- */}
                     <Divider className={classNames(styles.divider)} />
                     <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
