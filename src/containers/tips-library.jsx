@@ -9,7 +9,8 @@ import tutorialTags from '../lib/libraries/tutorial-tags';
 import analytics from '../lib/analytics';
 import {notScratchDesktop} from '../lib/isScratchDesktop';
 
-import LibraryComponent from '../components/library/library.jsx';
+//import LibraryComponent from '../components/library/library.jsx';
+import LibraryComponent from '../components/library/rhjxx-library.jsx';
 
 import {connect} from 'react-redux';
 

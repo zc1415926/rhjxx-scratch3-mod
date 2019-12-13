@@ -162,6 +162,7 @@ class MenuBar extends React.Component {
         ]);
     }
     componentDidMount () {
+        this.props.onOpenTipLibrary()
         document.addEventListener('keydown', this.handleKeyPress);
     }
     componentWillUnmount () {
