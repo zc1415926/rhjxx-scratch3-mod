@@ -15,6 +15,8 @@ import styles from './library.css';
 
 //用lodash和硬编码数组模拟数据库
 import _ from 'lodash';
+import RhjxxGradeSelector from './rhjxx-grade-selector.js';
+import RhjxxClassSelector from './rhjxx-class-selector.js';
 
 const messages = defineMessages({
     filterPlaceholder: {
@@ -31,25 +33,38 @@ const messages = defineMessages({
 
 const ALL_TAG = {tag: 'all', intlLabel: messages.allTag};
 const tagListPrefix = [ALL_TAG];
-var tagListGrades = [
-    {tag: '2016', intlLabel: {id:'grade.2016', defaultMessage:'2016级'}},
-    {tag: '2015', intlLabel: {id:'grade.2015', defaultMessage:'2015级'}},
-    {tag: '2014', intlLabel: {id:'grade.2014', defaultMessage:'2014级'}}
-];
 
-var tagListClasses = [
+var classList = [
     {grade: 2016, classes: [
-        {tag: '2016.01', intlLabel: {id:'grade.2016.01', defaultMessage:'2016级1班'}},
-        {tag: '2016.02', intlLabel: {id:'grade.2016.02', defaultMessage:'2016级2班'}}
+        {classNum: '1', text: '1班', students:[
+            {tag: '2016.01.01', intlLabel: {id:'grade.2016.01.01', defaultMessage:'赵'}},
+            {tag: '2016.01.02', intlLabel: {id:'grade.2016.01.02', defaultMessage:'钱'}}            
+        ]},
+        {classNum: '2', text: '2班', students:[
+            {tag: '2016.02.01', intlLabel: {id:'grade.2016.02.01', defaultMessage:'孙'}},
+            {tag: '2016.02.02', intlLabel: {id:'grade.2016.02.02', defaultMessage:'李'}}
+        ]}
     ]},
     {grade: 2015, classes: [
-        {tag: '2015.03', intlLabel: {id:'grade.2015.03', defaultMessage:'2015级3班'}},
-        {tag: '2015.04', intlLabel: {id:'grade.2015.04', defaultMessage:'2015级4班'}}
+        {classNum: '3', text: '3班', students:[
+            {tag: '2015.01.01', intlLabel: {id:'grade.2015.01.01', defaultMessage:'周'}},
+            {tag: '2015.01.02', intlLabel: {id:'grade.2015.01.02', defaultMessage:'吴'}}
+        ]},
+        {classNum: '4', text: '4班', students:[
+            {tag: '2015.02.01', intlLabel: {id:'grade.2015.02.01', defaultMessage:'郑'}},
+            {tag: '2015.02.02', intlLabel: {id:'grade.2015.02.02', defaultMessage:'王'}}
+        ]}
     ]},
     {grade: 2014, classes: [
-        {tag: '2014.05', intlLabel: {id:'grade.2014.05', defaultMessage:'2014级5班'}},
-        {tag: '2014.06', intlLabel: {id:'grade.2014.06', defaultMessage:'2014级6班'}}
-    ]},
+        {classNum: '5', text: '5班', students:[
+            {tag: '2014.02.01', intlLabel: {id:'grade.2014.02.01', defaultMessage:'冯'}},
+            {tag: '2014.02.02', intlLabel: {id:'grade.2014.02.02', defaultMessage:'陈'}}
+        ]},
+        {classNum: '6', text: '6班', students:[
+            {tag: '2014.02.01', intlLabel: {id:'grade.2014.02.01', defaultMessage:'楚'}},
+            {tag: '2014.02.02', intlLabel: {id:'grade.2014.02.02', defaultMessage:'魏'}}
+        ]}
+    ]}
 ];
 
 class LibraryComponent extends React.Component {
@@ -65,8 +80,8 @@ class LibraryComponent extends React.Component {
             'handleSelect',
             'handleTagClick',
             //这里还要加上
-            'handleGradeClick',
-            'handleClassClick',
+            //'handleGradeClick',
+            //'handleClassClick',
             'setFilteredDataRef'
         ]);
         this.state = {
@@ -74,9 +89,12 @@ class LibraryComponent extends React.Component {
             filterQuery: '',
             selectedTag: ALL_TAG.tag,
             loaded: false,
-            //currentGrade: {},
+            currentGrade: 0,
             playingItem2: null,
-            currentClass: []
+            currentClass: 0,
+            currentClasses: [],
+            currentStudents: [],
+            classSelectValue: '-1'
         };
     }
     componentDidMount () {
@@ -114,45 +132,18 @@ class LibraryComponent extends React.Component {
             });
         }
     } 
-    handleGradeClick (tag) {
-        console.log('handleGradeClick!');
-        console.log(tag);
-        var returnValue = _.find(tagListClasses, (item)=>{
-            console.log('item');
-            console.log(item);
-            return item.grade == tag;
-        })
-        //console.log('returnValue');
-        //console.log(returnValue);
-        this.setState({currentClass: returnValue.classes});
-
-        if (this.state.playingItem === null) {
+    
+    handleStudentClick (tag) {
+        if (this.state.playingItem2 === null) {
             this.setState({
                 filterQuery: '',
                 selectedTag: tag.toLowerCase()
             });
         } else {
-            this.props.onItemMouseLeave(this.getFilteredData()[[this.state.playingItem]]);
+            this.props.onItemMouseLeave(this.getFilteredData()[[this.state.playingItem2]]);
             this.setState({
                 filterQuery: '',
-                playingItem: null,
-                selectedTag: tag.toLowerCase()
-            });
-        }
-    }
-    handleClassClick (tag) {
-        console.log('handleClassClick');
-        console.log(tag);
-        if (this.state.playingItem === null) {
-            this.setState({
-                filterQuery: '',
-                selectedTag: tag.toLowerCase()
-            });
-        } else {
-            this.props.onItemMouseLeave(this.getFilteredData()[[this.state.playingItem]]);
-            this.setState({
-                filterQuery: '',
-                playingItem: null,
+                playingItem2: null,
                 selectedTag: tag.toLowerCase()
             });
         }
@@ -229,9 +220,43 @@ class LibraryComponent extends React.Component {
     setFilteredDataRef (ref) {
         this.filteredDataRef = ref;
     }
-    render () {
+    onGradeChangeHandler(e){
+        //获取选择的年级
+        let selectGrade = e.target.value;
+        //在Json数据中找到对应年级的节点
+        let classesObj = _.find(classList, (item)=>{
+            return item.grade == selectGrade;
+        })
+
+        this.setState({
+            //当前选择的年级：刚刚单击的选择的年级
+            currentGrade: selectGrade,
+            //当前的班级：年级节点中的班级数组
+            currentClasses: classesObj.classes,
+            //每次年级改变后，将班级select控件选择的项设为-1，即“请选择班级”
+            classSelectValue:'-1'
+        });
+    }
+    onClassChangeHandler(e){
+        //获取选择的班级
+        let selectClass = e.target.value;
+        //输出年级、班级
+        //console.log(this.state.currentGrade)
+        //console.log(selectClass)
         
-    
+        //在班级数据中找到选择的班级的结点
+        var studentsObj = _.find(this.state.currentClasses, (item)=>{
+            return item.classNum == selectClass;
+        })
+
+        this.setState({
+            //保存找到的学生信息到state
+            currentStudents: studentsObj.students,
+            //将班级select组件显示的值设为单击的那个（因为有指定班级select组件默认值的程序
+            //所以这里要加入改变值的程序）
+            classSelectValue:e.target.value})
+    }
+    render () {        
         return (
             <Modal
                 fullScreen
@@ -240,68 +265,34 @@ class LibraryComponent extends React.Component {
                 onRequestClose={this.handleClose}
             >
                 {(this.props.filterable || this.props.tags) && (
-                    <div className={styles.filterBar}>
-                        {this.props.filterable && (
-                            <Filter
-                                className={classNames(
-                                    styles.filterBarItem,
-                                    styles.filter
-                                )}
-                                filterQuery={this.state.filterQuery}
-                                inputClassName={styles.filterInput}
-                                placeholderText={this.props.intl.formatMessage(messages.filterPlaceholder)}
-                                onChange={this.handleFilterChange}
-                                onClear={this.handleFilterClear}
-                            />
-                        )}
+                    <div className={styles.filterBar}>                        
                         {this.props.filterable && this.props.tags && (
                             <Divider className={classNames(styles.filterBarItem, styles.divider)} />
                         )}
                         {
-                            /**这里改编了选年级的代码 */
-                            //this.props.tags &&
-                            <div className={styles.tagWrapper}>
-                                {tagListGrades.map((tagProps, id) => (
-                                    <TagButton
-                                        active={this.state.selectedTag === tagProps.tag.toLowerCase()}
-                                        className={classNames(
-                                            styles.filterBarItem,
-                                            styles.tagButton,
-                                            tagProps.className
-                                        )}
-                                        key={`tag-button-${id}`}
-                                        onClick={this.handleGradeClick}
-                                        {...tagProps}
-                                    />
-                                ))}
-                            </div>
-                        }
-                        {<div></div>/*        this.props.tags &&
-                            <div className={styles.tagWrapper}>
-                                {tagListPrefix.concat(this.props.tags).map((tagProps, id) => (
-                                    <TagButton
-                                        active={this.state.selectedTag === tagProps.tag.toLowerCase()}
-                                        className={classNames(
-                                            styles.filterBarItem,
-                                            styles.tagButton,
-                                            tagProps.className
-                                        )}
-                                        key={`tag-button-${id}`}
-                                        onClick={this.handleTagClick}
-                                        {...tagProps}
-                                    />
-                                ))}
-                            </div>*/
+                            //这里插入两个自定义select，一个是选年级，一个是选班级
+                            <>
+                                <RhjxxGradeSelector onchange={(e)=>this.onGradeChangeHandler(e)} />
+                                <RhjxxClassSelector currentClasses={this.state.currentClasses}
+                                                    onchange={(e)=>this.onClassChangeHandler(e)}
+                                                    value={this.state.classSelectValue} />
+                            </>
                         }
                     </div>
                 )}
-                
-                <div className={styles.filterBar}>
                 {
-                    /**这里改编了选班级的代码 */
-                    //this.props.tags &&
-                    <div className={styles.tagWrapper}>
-                        {this.state.currentClass.map((tagProps, id) => (
+                    //下边新起一个filterBar放学生的名字tag
+                    //TODO:filterBar的宽窄可以根据tag的多少来调整
+                }
+                
+                <div className={styles.filterBar}
+                style={{height: '11rem','background-color': 'rgb(39, 80, 139)'}}>
+                {
+                    <div className={styles.tagWrapper}
+                    style={{height: '11rem'}}>
+                        {
+                            this.state.currentStudents.length ==0?<div></div>:
+                            this.state.currentStudents.map((tagProps, id) => (
                             <TagButton
                                 active={this.state.selectedTag === tagProps.tag.toLowerCase()}
                                 className={classNames(
@@ -310,11 +301,11 @@ class LibraryComponent extends React.Component {
                                     tagProps.className
                                 )}
                                 key={`tag-button-${id}`}
-                                onClick={this.handleTagClick}
+                                onClick={(e)=>this.handleStudentClick(e)}
                                 {...tagProps}
                             />
                         ))}
-                    </div>
+                    </div>            
                 }
                 </div>
                 <div
