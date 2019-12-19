@@ -15,8 +15,7 @@ import styles from './library.css';
 
 //用lodash和硬编码数组模拟数据库
 import _ from 'lodash';
-import RhjxxGradeSelector from './rhjxx-grade-selector.js';
-import RhjxxClassSelector from './rhjxx-class-selector.js';
+import RhjxxGradeClassSelect from './rhjxx-grade-class-select.jsx';
 
 const messages = defineMessages({
     filterPlaceholder: {
@@ -272,10 +271,8 @@ class LibraryComponent extends React.Component {
                         {
                             //这里插入两个自定义select，一个是选年级，一个是选班级
                             <>
-                                <RhjxxGradeSelector onchange={(e)=>this.onGradeChangeHandler(e)} />
-                                <RhjxxClassSelector currentClasses={this.state.currentClasses}
-                                                    onchange={(e)=>this.onClassChangeHandler(e)}
-                                                    value={this.state.classSelectValue} />
+                                <RhjxxGradeClassSelect />
+                                
                             </>
                         }
                     </div>
@@ -286,7 +283,7 @@ class LibraryComponent extends React.Component {
                 }
                 
                 <div className={styles.filterBar}
-                style={{height: '11rem','background-color': 'rgb(39, 80, 139)'}}>
+                style={{height: '11rem','backgroundColor': 'rgb(39, 80, 139)'}}>
                 {
                     <div className={styles.tagWrapper}
                     style={{height: '11rem'}}>
