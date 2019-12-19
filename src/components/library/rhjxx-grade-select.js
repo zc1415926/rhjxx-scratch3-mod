@@ -12,12 +12,13 @@ const RhjxxGradeSelect = (props)=>{
             }
         )
     }
-    
+
     return(
         <select id="rhjxx-grade-select" onChange={props.onchange}>
             {gradeOptions}
         </select>
     )
+
 }
 
 export default RhjxxGradeSelect;

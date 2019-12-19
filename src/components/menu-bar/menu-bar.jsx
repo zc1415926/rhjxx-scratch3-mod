@@ -162,6 +162,7 @@ class MenuBar extends React.Component {
         ]);
     }
     componentDidMount () {
+        //调用这方法可以打开TipLibrary（教程）页面
         this.props.onOpenTipLibrary()
         document.addEventListener('keydown', this.handleKeyPress);
     }
