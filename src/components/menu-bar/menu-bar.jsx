@@ -79,7 +79,7 @@ import SB3DownloaderRhjxx from '../../containers/sb3-downloader-rhjxx.jsx';
 //zc1415926
 //import CrashMessage from '../crash-message/crash-message.jsx';
 //import BrowerModal from '../browser-modal/browser-modal.jsx';
-import RhjxxInfoSelect from '../library/rhjxx-grade-class-select.jsx';
+import RhjxxFileInfoSelect from '../library/rhjxx-file-info-select.jsx';
 
 const ariaMessages = defineMessages({
     language: {
@@ -505,7 +505,7 @@ class MenuBar extends React.Component {
                     <Divider className={classNames(styles.divider)} />
                     {/**zc1415926,复制一个SB3Downloader，把保存逻辑改了
                      * 在菜单栏里选择年级、班级、姓名、课程等，把对应信息放入state，给“保存作业”按钮使用 */}
-                    <RhjxxInfoSelect>{(fileInfo)=>(
+                    <RhjxxFileInfoSelect>{(fileInfo)=>(
                         <SB3DownloaderRhjxx fileInfo={fileInfo}>{(className, downloadProjectCallback) => (
                             <button
                                 className={className}
@@ -514,7 +514,7 @@ class MenuBar extends React.Component {
                             </button>
                         )}</SB3DownloaderRhjxx>
                     )}    
-                    </RhjxxInfoSelect>
+                    </RhjxxFileInfoSelect>
                     <Divider className={classNames(styles.divider)} />
                     {/**------------------------------------------------------------------------- */}
 

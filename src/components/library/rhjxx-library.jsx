@@ -15,7 +15,7 @@ import styles from './library.css';
 
 //用lodash和硬编码数组模拟数据库
 import _ from 'lodash';
-import RhjxxGradeClassSelect from './rhjxx-grade-class-select.jsx';
+import RhjxxGradeClassSelect from './rhjxx-file-info-select.jsx';
 
 const messages = defineMessages({
     filterPlaceholder: {

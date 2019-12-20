@@ -1,14 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import RhjxxGradeSelect from './rhjxx-grade-select.js';
-import RhjxxClassSelect from './rhjxx-class-select.js';
-import RhjxxStudentSelect from './rhjxx-student-select.js';
-import RhjxxCourseSelect from './rhjxx-course-select.js';
+import RhjxxSelect from './rhjxx-select.js';
 
 //设定axios在本组件里的baseURL方便以后换其它服务器
 axios.defaults.baseURL = 'https://my-json-server.typicode.com/zc1415926/rhjxx-scratch3-fake-db';
 
-class RhjxxGradeClassSelect extends React.Component{
+class RhjxxFileInfoSelect extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -91,14 +88,27 @@ class RhjxxGradeClassSelect extends React.Component{
     render(){
             return (
                 <>
-                    <RhjxxGradeSelect grades={this.state.grades}
-                                    onchange={(e)=>this.gradeChangeHandler(e)} />
-                    <RhjxxCourseSelect courses={this.state.courses}
-                                    onchange={(e)=>this.courseChangeHandler(e)}/>
-                    <RhjxxClassSelect classes={this.state.classes}
-                                    onchange={(e)=>this.classChangeHandler(e)} />
-                    <RhjxxStudentSelect students={this.state.students}
-                                        onchange={(e)=>this.studentChangeHandler(e)} />
+                    <RhjxxSelect 
+                        selectId={"rhjxx-grade-select"}
+                        items={this.state.grades}
+                        tipText={"年级"}
+                        onchange={(e)=>this.gradeChangeHandler(e)} />
+                    <RhjxxSelect 
+                        selectId={"rhjxx-course-select"}
+                        items={this.state.courses}
+                        tipText={"课题"}
+                        onchange={(e)=>this.courseChangeHandler(e)} />
+                    <RhjxxSelect 
+                        selectId={"rhjxx-class-select"}
+                        items={this.state.classes}
+                        tipText={"班级"}
+                        onchange={(e)=>this.classChangeHandler(e)} />
+                    <RhjxxSelect 
+                        selectId={"rhjxx-student-select"}
+                        items={this.state.students}
+                        tipText={"姓名"}
+                        onchange={(e)=>this.studentChangeHandler(e)} />
+
                     {/* 函数作为子组件：https://www.html.cn/archives/9471 */}                    
                     {this.props.children(this.state.fileInfo)}
                 </>
@@ -106,4 +116,4 @@ class RhjxxGradeClassSelect extends React.Component{
     }
 }
 
-export default RhjxxGradeClassSelect;
+export default RhjxxFileInfoSelect;
