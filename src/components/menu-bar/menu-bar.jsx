@@ -76,6 +76,10 @@ import sharedMessages from '../../lib/shared-messages';
 
 //把SB3DownloaderRhjxx复制一份，文件生成部分不用管，只把文件下载逻辑改成，提交到服务器。
 import SB3DownloaderRhjxx from '../../containers/sb3-downloader-rhjxx.jsx';
+//zc1415926
+//import CrashMessage from '../crash-message/crash-message.jsx';
+//import BrowerModal from '../browser-modal/browser-modal.jsx';
+import RhjxxInfoSelect from '../library/rhjxx-grade-class-select.jsx';
 
 const ariaMessages = defineMessages({
     language: {
@@ -163,7 +167,7 @@ class MenuBar extends React.Component {
     }
     componentDidMount () {
         //调用这方法可以打开TipLibrary（教程）页面
-        this.props.onOpenTipLibrary()
+        //this.props.onOpenTipLibrary()
         document.addEventListener('keydown', this.handleKeyPress);
     }
     componentWillUnmount () {
@@ -286,6 +290,11 @@ class MenuBar extends React.Component {
             }
         };
     }
+    //zc1415926,
+    fileInfoHandler(info){
+        console.log('info');
+        console.log(info);
+    }
 
     render () {
         const saveNowMessage = (
@@ -336,6 +345,7 @@ class MenuBar extends React.Component {
                     styles.menuBar
                 )}
             >
+                {/* <BrowerModal /> */}
                 <div className={styles.mainMenu}>
                     <div className={styles.fileGroup}>
                         <div className={classNames(styles.menuBarItem)}>
@@ -490,18 +500,24 @@ class MenuBar extends React.Component {
                                 </MenuSection>
                             </MenuBarMenu>
                         </div>
-                    </div>
+                    </div>                    
+                    
                     <Divider className={classNames(styles.divider)} />
-                    {/**复制一个SB3Downloader，把保存逻辑改了，看不懂组件原理也没关系。 */}
-                    <SB3DownloaderRhjxx>{(className, downloadProjectCallback) => (
-                        <button
-                            className={className}
-                            onClick={this.getSaveToServerHandler(downloadProjectCallback)}
-                        >保存作业
-                        </button>
-                    )}</SB3DownloaderRhjxx>
-                    {/**----------------------------------------------------------- */}
+                    {/**zc1415926,复制一个SB3Downloader，把保存逻辑改了
+                     * 在菜单栏里选择年级、班级、姓名、课程等，把对应信息放入state，给“保存作业”按钮使用 */}
+                    <RhjxxInfoSelect>{(fileInfo)=>(
+                        <SB3DownloaderRhjxx fileInfo={fileInfo}>{(className, downloadProjectCallback) => (
+                            <button
+                                className={className}
+                                onClick={this.getSaveToServerHandler(downloadProjectCallback)}
+                            >保存作业
+                            </button>
+                        )}</SB3DownloaderRhjxx>
+                    )}    
+                    </RhjxxInfoSelect>
                     <Divider className={classNames(styles.divider)} />
+                    {/**------------------------------------------------------------------------- */}
+
                     <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
                         className={classNames(styles.menuBarItem, styles.hoverable)}
