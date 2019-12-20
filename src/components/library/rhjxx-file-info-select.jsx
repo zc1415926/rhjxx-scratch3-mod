@@ -2,6 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import RhjxxSelect from './rhjxx-select.js';
 
+import Select from 'react-select';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
+
 //设定axios在本组件里的baseURL方便以后换其它服务器
 axios.defaults.baseURL = 'https://my-json-server.typicode.com/zc1415926/rhjxx-scratch3-fake-db';
 
@@ -53,6 +61,8 @@ class RhjxxFileInfoSelect extends React.Component{
             .catch(err => {
                 console.log(err);
             });
+        //年级一改，学生的信息清空
+        //this.setState({students: []});    
     }
     courseChangeHandler(e){
         let selectedCourse = e.target.value;
@@ -86,8 +96,31 @@ class RhjxxFileInfoSelect extends React.Component{
     }
     
     render(){
+        const options = [
+            { value: 'chocolate', label: 'Chocolate' },
+            { value: 'strawberry', label: 'Strawberry' },
+            { value: 'vanilla', label: 'Vanilla' },
+          ];
+          const customStyles = {
+           
+            container: (provided, state) => ({
+              // none of react-select's styles are passed to <Control />
+              ...provided,
+              width: '150px'
+            }),
+            option: (provided, state) => ({
+                // none of react-select's styles are passed to <Control />
+                ...provided,
+                color: '#777777',
+              })
+          }
             return (
                 <>
+                <Select
+                    styles={customStyles}
+                    placeholder={'请选择'}
+                    options={options}
+                />
                     <RhjxxSelect 
                         selectId={"rhjxx-grade-select"}
                         items={this.state.grades}
