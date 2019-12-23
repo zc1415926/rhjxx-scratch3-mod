@@ -25,38 +25,69 @@ class RhjxxFileInfoSelect extends React.Component{
             selectedClass: null,
             selectedStudent: null,
             selectedCourse: null,
-            fileInfo: null
+            fileInfo: null,
+            gradeOptions: [],
+            classOptions: [],
+            studentOptions: [],
+            courseOptions: []
         }
     }
+    /* 
+     const options = [
+            { value: 'chocolate', label: 'Chocolate' },
+            { value: 'strawberry', label: 'Strawberry' },
+            { value: 'vanilla', label: 'Vanilla' },
+          ]; */
     componentDidMount(){
         //组件一挂载马上请求“年级-班级”数据，显示在GradeSelect
         axios.get('/grades')
             .then(res => {
-                this.setState({grades: res.data})
+                let gradesData = res.data;
+                let gradeOptions = [];
+                gradesData.forEach(item=>{
+                    gradeOptions.push({value: item.id, label: item.name+'级'});
+                });
+                
+                this.setState({grades: res.data, gradeOptions: gradeOptions})
             })
             .catch(err => {
                 console.log(err);
             });
     }
     gradeChangeHandler(e){
-        let selectedGrade = e.target.value;
+        console.log('e.target');
+        console.log(e.value);
+        let selectedGrade = e.value;
         this.setState({selectedGrade: selectedGrade});
 
         //根据选择的年级，在年级返回数据里找出班级数据（减少一次数据请求）
         //data protection
         let tGrades = {...this.state.grades};
-        let tClasses = null;      
-
+        let tClasses = null;
+        let classOptions = [];
         for(let i in tGrades){
             if(tGrades[i]['id'] == selectedGrade){
                 tClasses = tGrades[i]['classes'];
+
+                tClasses.forEach(item=>{
+                    classOptions.push({value: item.id, label: item.name+'班'});
+                });
             }
         }
-        this.setState({classes: tClasses});
+        
+        this.setState({classes: tClasses,
+        classOptions: classOptions});
 
         axios.get('/courses?gradeId=' + selectedGrade)
             .then(res => {
-                this.setState({courses: res.data})
+                let courseData = res.data;
+                let courseOptions = [];
+                courseData.forEach(item=>{
+                    courseOptions.push({value: item.id, label: item.name});
+                });
+                
+                this.setState({courses: res.data,
+                courseOptions: courseOptions})
             })
             .catch(err => {
                 console.log(err);
@@ -65,24 +96,33 @@ class RhjxxFileInfoSelect extends React.Component{
         //this.setState({students: []});    
     }
     courseChangeHandler(e){
-        let selectedCourse = e.target.value;
+        let selectedCourse = e.value;
         this.setState({selectedCourse: selectedCourse});
     }
     classChangeHandler(e){
-        let selectedClass = e.target.value;
+        let selectedClass = e.value;
         this.setState({selectedClass: selectedClass});
 
         axios.get('/students?classId=' + selectedClass)
             .then(res => {
                 //学生数量很多时，网页会自动为select添加滚动条
-                this.setState({students: res.data});
+                //this.setState({students: res.data});
+                let studentData = res.data;
+                
+                let studentOptions = [];
+                studentData.forEach(item=>{
+                    studentOptions.push({value: item.id, label: item.name});
+                });
+                console.log('studentOptions');
+                console.log(studentOptions);
+                this.setState({studentOptions: studentOptions});
             })
             .catch(err => {
                 console.log(err);
             });
     }
     studentChangeHandler(e){
-        let selectedStudent = e.target.value;
+        let selectedStudent = e.value;
         this.setState({selectedStudent: selectedStudent})
         //返回一个数组，方便遍历
         this.setState({
@@ -93,6 +133,9 @@ class RhjxxFileInfoSelect extends React.Component{
                 selectedStudent//学生id
             ]
         });
+    }
+    selectH(){
+       // alert('aa')
     }
     
     render(){
@@ -106,20 +149,48 @@ class RhjxxFileInfoSelect extends React.Component{
             container: (provided, state) => ({
               // none of react-select's styles are passed to <Control />
               ...provided,
-              width: '150px'
+              width: '100px',
+              
+              margin: '0px 1px',
+            }),
+            control: (provided, state) => ({
+                // none of react-select's styles are passed to <Control />
+                ...provided,
+                minHeight: '32px',
+                height: '32px',
+              
             }),
             option: (provided, state) => ({
                 // none of react-select's styles are passed to <Control />
                 ...provided,
-                color: '#777777',
+                color: '#888888',
               })
           }
             return (
                 <>
                 <Select
                     styles={customStyles}
-                    placeholder={'请选择'}
-                    options={options}
+                    placeholder={'年级'}
+                    options={this.state.gradeOptions}
+                    onChange={(e)=>this.gradeChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'班级'}
+                    options={this.state.classOptions}
+                    onChange={(e)=>this.classChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'姓名'}
+                    options={this.state.studentOptions}
+                    onChange={(e)=>this.studentChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'课题'}
+                    options={this.state.courseOptions}
+                    onChange={(e)=>this.courseChangeHandler(e)}
                 />
                     <RhjxxSelect 
                         selectId={"rhjxx-grade-select"}
