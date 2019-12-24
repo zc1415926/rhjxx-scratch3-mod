@@ -146,56 +146,56 @@ class RhjxxFileInfoSelect extends React.Component{
         });
     }
     render(){
-            const customStyles = {
-                container: (provided, state) => ({
-                    ...provided,
-                    width: '100px',
-                    margin: '0px 1px',
-                }),
-                control: (provided, state) => ({
-                    ...provided,
-                    minHeight: '32px',
-                    height: '32px',              
-                }),
-                option: (provided, state) => ({
-                    ...provided,
-                    color: '#888888',
-                })
-            }
-            return (
-                <>
-                    <Select
-                        styles={customStyles}
-                        placeholder={'年级'}
-                        value={this.state.gradeSelectValue}
-                        options={this.state.gradeOptions}
-                        onChange={(e)=>this.gradeChangeHandler(e)}
-                    />
-                    <Select
-                        styles={customStyles}
-                        placeholder={'班级'}
-                        value={this.state.classSelectValue}
-                        options={this.state.classOptions}
-                        onChange={(e)=>this.classChangeHandler(e)}
-                    />
-                    <Select
-                        styles={customStyles}
-                        placeholder={'姓名'}
-                        value={this.state.studentSelectValue}
-                        options={this.state.studentOptions}
-                        onChange={(e)=>this.studentChangeHandler(e)}
-                    />
-                    <Select
-                        styles={customStyles}
-                        placeholder={'课题'}
-                        value={this.state.courseSelectValue}
-                        options={this.state.courseOptions}
-                        onChange={(e)=>this.courseChangeHandler(e)}
-                    />
-                    {/* 函数作为子组件：https://www.html.cn/archives/9471 */}                    
-                    {this.props.children(this.state.fileInfo)}
-                </>
-            );
+        const customStyles = {
+            container: (provided, state) => ({
+                ...provided,
+                width: '100px',
+                margin: '0px 1px',
+            }),
+            control: (provided, state) => ({
+                ...provided,
+                minHeight: '32px',
+                height: '32px',              
+            }),
+            option: (provided, state) => ({
+                ...provided,
+                color: '#888888',
+            })
+        }
+        return (
+            <>
+                <Select
+                    styles={customStyles}
+                    placeholder={'年级'}
+                    value={this.state.gradeSelectValue}
+                    options={this.state.gradeOptions}
+                    onChange={(e)=>this.gradeChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'班级'}
+                    value={this.state.classSelectValue}
+                    options={this.state.classOptions}
+                    onChange={(e)=>this.classChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'姓名'}
+                    value={this.state.studentSelectValue}
+                    options={this.state.studentOptions}
+                    onChange={(e)=>this.studentChangeHandler(e)}
+                />
+                <Select
+                    styles={customStyles}
+                    placeholder={'课题'}
+                    value={this.state.courseSelectValue}
+                    options={this.state.courseOptions}
+                    onChange={(e)=>this.courseChangeHandler(e)}
+                />
+                {/* 函数作为子组件：https://www.html.cn/archives/9471 */}                
+                {this.props.children(this.state.fileInfo)}
+            </>
+        );
     }
 }
 
