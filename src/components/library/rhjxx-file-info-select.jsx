@@ -65,8 +65,6 @@ class RhjxxFileInfoSelect extends React.Component{
         let classOptions = [];
         
         gradesClassesData.forEach(gradeClass=>{
-            console.log('gradeClass');
-            console.log(gradeClass);
             if(gradeClass.id === selectedGrade){
                 gradeClass.classes.forEach(classItem=>{
                     classOptions.push({value: classItem.id, label: classItem.name+'班'});
