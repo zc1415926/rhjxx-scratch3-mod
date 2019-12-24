@@ -4,12 +4,6 @@ import RhjxxSelect from './rhjxx-select.js';
 
 import Select from 'react-select';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
-
 //设定axios在本组件里的baseURL方便以后换其它服务器
 axios.defaults.baseURL = 'https://my-json-server.typicode.com/zc1415926/rhjxx-scratch3-fake-db';
 
@@ -37,12 +31,7 @@ class RhjxxFileInfoSelect extends React.Component{
             courseSelectValue: null
         }
     }
-    /* 
-     const options = [
-            { value: 'chocolate', label: 'Chocolate' },
-            { value: 'strawberry', label: 'Strawberry' },
-            { value: 'vanilla', label: 'Vanilla' },
-          ]; */
+
     componentDidMount(){
         //组件一挂载马上请求“年级-班级”数据，显示在GradeSelect
         axios.get('/grades')
@@ -60,8 +49,6 @@ class RhjxxFileInfoSelect extends React.Component{
             });
     }
     gradeChangeHandler(e){
-        console.log('e.target');
-        console.log(e.value);
         let selectedGrade = e.value;
         this.setState({
             selectedGrade: selectedGrade,
@@ -86,8 +73,7 @@ class RhjxxFileInfoSelect extends React.Component{
                 });
             }
         }
-        //value={this.state.classSelectValue}
-        //placeholder={this.state.classPlaceholder}
+
         this.setState({
             //原生
             classes: tClasses,
@@ -111,15 +97,6 @@ class RhjxxFileInfoSelect extends React.Component{
             .catch(err => {
                 console.log(err);
             });
-        //年级一改，学生的信息清空
-        //this.setState({students: []});    
-    }
-    courseChangeHandler(e){
-        let selectedCourse = e.value;
-        this.setState({
-            selectedCourse: selectedCourse,
-            courseSelectValue: e
-        });
     }
     classChangeHandler(e){
         let selectedClass = e.value;
@@ -135,15 +112,13 @@ class RhjxxFileInfoSelect extends React.Component{
         axios.get('/students?classId=' + selectedClass)
             .then(res => {
                 //学生数量很多时，网页会自动为select添加滚动条
-                //this.setState({students: res.data});
                 let studentData = res.data;
                 
                 let studentOptions = [];
                 studentData.forEach(item=>{
                     studentOptions.push({value: item.id, label: item.name});
                 });
-                console.log('studentOptions');
-                console.log(studentOptions);
+                
                 this.setState({studentOptions: studentOptions});
             })
             .catch(err => {
@@ -168,10 +143,13 @@ class RhjxxFileInfoSelect extends React.Component{
             ]
         });
     }
-    selectH(){
-       // alert('aa')
+    courseChangeHandler(e){
+        let selectedCourse = e.value;
+        this.setState({
+            selectedCourse: selectedCourse,
+            courseSelectValue: e
+        });
     }
-    
     render(){
         const options = [
             { value: 'chocolate', label: 'Chocolate' },
