@@ -27,40 +27,28 @@ class SB3DownloaderRhjxx extends React.Component {
         ]);
     }
     postToServer(fileReader){
-        //判断数据是否填写
-        if(!this.props.fileInfo){
-            console.error("请填写学生信息")
-        }else{
-            //判断学生信息是否填写完整，如果有一项没填，isElementNull就为true
-            let isElementNull = false;
-            this.props.fileInfo.forEach(element => {
-                if(!element) {
-                    isElementNull = true;
-                }                
-            });
-
-            if(isElementNull){
-                console.error("请将学生信息填写完整")
-            }else{
-                axios.post('http://localhost:2222/scratch-file', {
-                    //从Scratch3菜单栏上的文件名框传入的
-                    fileName: this.props.projectFilename,
-                    //this.props.fileInfo是从SB3DownloaderRhjxx的父组件传入的
-                    //函数作为子组件：https://www.html.cn/archives/9471
-                    fileInfo: this.props.fileInfo,
-                    //base64形式的sb3文件数据
-                    fileData: fileReader.result
+        let fileInfo = {...this.props.fileInfo};
+        //检查学生信息是否填写完整
+        if(fileInfo.gradeId && fileInfo.classId && fileInfo.studentId && fileInfo.courseId){
+                //从Scratch3菜单栏上的文件名框传入的
+                fileName: this.props.projectFilename,
+                //this.props.fileInfo是从SB3DownloaderRhjxx的父组件传入的
+                //函数作为子组件：https://www.html.cn/archives/9471
+                fileInfo: this.props.fileInfo,
+                //base64形式的sb3文件数据
+                fileData: fileReader.result
+            })
+                .then(function (response) {
+                    console.log('TODO:根据返回信息提示文件保存成功')
+                    console.log(response)
                 })
-                    .then(function (response) {
-                        console.log('TODO:根据返回信息提示文件保存成功')
-                        console.log(response)
-                    })
-                    .catch(function (error) {
-                        if(error){
-                            throw error;
-                        }
-                    });
-            }
+                .catch(function (error) {
+                    if(error){
+                        throw error;
+                    }
+                });
+        }else{
+            console.error("请将学生信息填写完整")
         }
     }
 

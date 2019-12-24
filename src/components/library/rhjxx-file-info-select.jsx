@@ -134,12 +134,12 @@ class RhjxxFileInfoSelect extends React.Component{
             //selectedCourse: selectedCourse,
             courseSelectValue: e,
             //当选择最后一项（课题）后，将之前选择的所有信息存入数组，方便后台读取
-            fileInfo: [
-                {gradeId: this.state.selectedGrade},//年级id
-                {classId: this.state.selectedClass},//班级id
-                {studentId: this.state.selectedStudent},//学生id
-                {courseId: selectedCourse},//课题id
-            ]
+            fileInfo: {
+                gradeId: this.state.selectedGrade,//年级id
+                classId: this.state.selectedClass,//班级id
+                studentId: this.state.selectedStudent,//学生id
+                courseId: selectedCourse,//课题id
+            }
         });
     }
     render(){
