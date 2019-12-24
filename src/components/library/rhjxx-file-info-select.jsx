@@ -60,22 +60,19 @@ class RhjxxFileInfoSelect extends React.Component{
         });
 
         //根据选择的年级，在年级返回数据里找出班级数据（减少一次数据请求）
-        //data protection
-        let tGrades = {...this.state.grades};
-        let tClasses = null;
+        //data protection        
+        let gradesClassesData = [...this.state.grades];
         let classOptions = [];
-        //tGrades是一个数组，每一项是一个年级的信息，每一个年级信息包括该年级所辖班级信息
-        for(let i in tGrades){
-            //如果数组某一项的id等于之前选定的年级，则读取班级信息
-            if(tGrades[i]['id'] == selectedGrade){
-                tClasses = tGrades[i]['classes'];
-                //取出每个班的信息，组成班级select的选项
-                tClasses.forEach(item=>{
-                    classOptions.push({value: item.id, label: item.name+'班'});
-                });
+        
+        gradesClassesData.forEach(gradeClass=>{
+            console.log('gradeClass');
+            console.log(gradeClass);
+            if(gradeClass.id === selectedGrade){
+                gradeClass.classes.forEach(classItem=>{
+                    classOptions.push({value: classItem.id, label: classItem.name+'班'});
+                })
             }
-        }
-
+        });
         this.setState({classOptions: classOptions});
 
         //根据选择的年级，请求课题数据
