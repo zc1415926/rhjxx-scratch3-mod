@@ -125,22 +125,21 @@ class RhjxxFileInfoSelect extends React.Component{
             studentSelectValue: e,
             //班级改变的时候，清空所选姓名、课题
             courseSelectValue: null
-        })
-        //返回一个数组，方便遍历
-        this.setState({
-            fileInfo: [
-                this.state.selectedGrade,//年级id
-                this.state.selectedCourse,//课题id
-                this.state.selectedClass,//班级id
-                selectedStudent//学生id
-            ]
         });
     }
     courseChangeHandler(e){
         let selectedCourse = e.value;
         this.setState({
-            selectedCourse: selectedCourse,
-            courseSelectValue: e
+            //下边这一行先不删，要是逻辑改了再恢复回来
+            //selectedCourse: selectedCourse,
+            courseSelectValue: e,
+            //当选择最后一项（课题）后，将之前选择的所有信息存入数组，方便后台读取
+            fileInfo: [
+                {gradeId: this.state.selectedGrade},//年级id
+                {classId: this.state.selectedClass},//班级id
+                {studentId: this.state.selectedStudent},//学生id
+                {courseId: selectedCourse},//课题id
+            ]
         });
     }
     render(){
