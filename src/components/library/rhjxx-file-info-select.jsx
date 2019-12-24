@@ -3,7 +3,7 @@ import axios from 'axios';
 import Select from 'react-select';
 
 //设定axios在本组件里的baseURL方便以后换其它服务器
-axios.defaults.baseURL = 'https://my-json-server.typicode.com/zc1415926/rhjxx-scratch3-fake-db';
+axios.defaults.baseURL = 'http://localhost:3000';
 
 class RhjxxFileInfoSelect extends React.Component{
     constructor(props){
