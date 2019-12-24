@@ -19,6 +19,9 @@ import axios from 'axios';
  *     />
  * )}</SB3DownloaderRhjxx>
  */
+
+ axios.defaults.baseURL = 'http://localhost:3000';
+
 class SB3DownloaderRhjxx extends React.Component {
     constructor (props) {
         super(props);
@@ -30,6 +33,7 @@ class SB3DownloaderRhjxx extends React.Component {
         let fileInfo = {...this.props.fileInfo};
         //检查学生信息是否填写完整
         if(fileInfo.gradeId && fileInfo.classId && fileInfo.studentId && fileInfo.courseId){
+            axios.post('/scratch-file', {
                 //从Scratch3菜单栏上的文件名框传入的
                 fileName: this.props.projectFilename,
                 //this.props.fileInfo是从SB3DownloaderRhjxx的父组件传入的
