@@ -29,7 +29,12 @@ class RhjxxFileInfoSelect extends React.Component{
             gradeOptions: [],
             classOptions: [],
             studentOptions: [],
-            courseOptions: []
+            courseOptions: [],
+            //react-select的value设为null就会只显示placeholder
+            gradeSelectValue: null,
+            classSelectValue: null,
+            studentelectValue: null,
+            courseSelectValue: null
         }
     }
     /* 
@@ -58,7 +63,14 @@ class RhjxxFileInfoSelect extends React.Component{
         console.log('e.target');
         console.log(e.value);
         let selectedGrade = e.value;
-        this.setState({selectedGrade: selectedGrade});
+        this.setState({
+            selectedGrade: selectedGrade,
+            gradeSelectValue: e,
+            //年级改变的时候，清空所选班级、姓名、课题
+            classSelectValue: null,
+            studentSelectValue: null,
+            courseSelectValue: null
+        });
 
         //根据选择的年级，在年级返回数据里找出班级数据（减少一次数据请求）
         //data protection
@@ -74,9 +86,14 @@ class RhjxxFileInfoSelect extends React.Component{
                 });
             }
         }
-        
-        this.setState({classes: tClasses,
-        classOptions: classOptions});
+        //value={this.state.classSelectValue}
+        //placeholder={this.state.classPlaceholder}
+        this.setState({
+            //原生
+            classes: tClasses,
+            //react-select
+            classOptions: classOptions
+        });
 
         axios.get('/courses?gradeId=' + selectedGrade)
             .then(res => {
@@ -86,8 +103,10 @@ class RhjxxFileInfoSelect extends React.Component{
                     courseOptions.push({value: item.id, label: item.name});
                 });
                 
-                this.setState({courses: res.data,
-                courseOptions: courseOptions})
+                this.setState({
+                    courses: res.data,
+                    courseOptions: courseOptions
+                })
             })
             .catch(err => {
                 console.log(err);
@@ -97,11 +116,21 @@ class RhjxxFileInfoSelect extends React.Component{
     }
     courseChangeHandler(e){
         let selectedCourse = e.value;
-        this.setState({selectedCourse: selectedCourse});
+        this.setState({
+            selectedCourse: selectedCourse,
+            courseSelectValue: e
+        });
     }
     classChangeHandler(e){
         let selectedClass = e.value;
-        this.setState({selectedClass: selectedClass});
+        this.setState({
+            selectedClass: selectedClass,
+            //班级select选择后，将选择的值传给select
+            classSelectValue: e,
+            //班级改变的时候，清空所选姓名、课题
+            studentSelectValue: null,
+            courseSelectValue: null
+        });
 
         axios.get('/students?classId=' + selectedClass)
             .then(res => {
@@ -123,7 +152,12 @@ class RhjxxFileInfoSelect extends React.Component{
     }
     studentChangeHandler(e){
         let selectedStudent = e.value;
-        this.setState({selectedStudent: selectedStudent})
+        this.setState({
+            selectedStudent: selectedStudent,
+            studentSelectValue: e,
+            //班级改变的时候，清空所选姓名、课题
+            courseSelectValue: null
+        })
         //返回一个数组，方便遍历
         this.setState({
             fileInfo: [
@@ -171,24 +205,28 @@ class RhjxxFileInfoSelect extends React.Component{
                 <Select
                     styles={customStyles}
                     placeholder={'年级'}
+                    value={this.state.gradeSelectValue}
                     options={this.state.gradeOptions}
                     onChange={(e)=>this.gradeChangeHandler(e)}
                 />
                 <Select
                     styles={customStyles}
                     placeholder={'班级'}
+                    value={this.state.classSelectValue}
                     options={this.state.classOptions}
                     onChange={(e)=>this.classChangeHandler(e)}
                 />
                 <Select
                     styles={customStyles}
                     placeholder={'姓名'}
+                    value={this.state.studentSelectValue}
                     options={this.state.studentOptions}
                     onChange={(e)=>this.studentChangeHandler(e)}
                 />
                 <Select
                     styles={customStyles}
                     placeholder={'课题'}
+                    value={this.state.courseSelectValue}
                     options={this.state.courseOptions}
                     onChange={(e)=>this.courseChangeHandler(e)}
                 />
